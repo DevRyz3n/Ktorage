@@ -8,6 +8,9 @@ import io.ktor.http.*
 import io.ktor.gson.*
 import io.ktor.features.*
 import com.fasterxml.jackson.databind.*
+import dev.ryz3n.database.DatabaseFactory
+import dev.ryz3n.route.igPost
+import dev.ryz3n.service.IgPostService
 import io.ktor.jackson.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
@@ -26,21 +29,14 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    val client = HttpClient(Apache) {
-    }
+    DatabaseFactory.init()
+    // val client = HttpClient(Apache) {}
 
-    routing {
-        get("/") {
-            call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
-        }
 
-        get("/json/gson") {
-            call.respond(mapOf("hello" to "world"))
-        }
+    val igPostService = IgPostService()
 
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
-        }
+    install(Routing){
+        igPost(igPostService)
     }
 }
 
