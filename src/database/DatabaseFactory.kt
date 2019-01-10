@@ -9,6 +9,7 @@ import com.zaxxer.hikari.HikariDataSource
 import dev.ryz3n.model.IgPostsFullByJson
 import dev.ryz3n.model.PostsTable
 import dev.ryz3n.util.CrawlerTxtUtil
+import dev.ryz3n.util.DateUtil.igPostDate2Timestamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
@@ -36,7 +37,7 @@ object DatabaseFactory {
                         table[post_author] = "post_author"
                         table[post_content] = "post_content"
                         table[post_from] = "instagram"
-                        table[post_date] = json.datetime
+                        table[post_date] = igPostDate2Timestamp(json.datetime)
 
                         val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
                         var index = 0
