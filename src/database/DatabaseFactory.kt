@@ -2,7 +2,6 @@
 
 package dev.ryz3n.database
 
-import ch.qos.logback.classic.Logger
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.zaxxer.hikari.HikariConfig
@@ -12,13 +11,11 @@ import dev.ryz3n.model.PostsTable
 import dev.ryz3n.util.CrawlerTxtUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.lang.Exception
-import java.sql.SQLException
+import kotlin.Exception
 
 object DatabaseFactory {
 
@@ -59,7 +56,7 @@ object DatabaseFactory {
                         table[post_img_8] = imgList[8]
                         table[post_img_9] = imgList[9]
                     }
-                } catch (e: ExposedSQLException) {
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
 

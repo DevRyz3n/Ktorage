@@ -1,3 +1,5 @@
+@file:Suppress("ObjectPropertyName")
+
 package dev.ryz3n.model
 
 import org.jetbrains.exposed.sql.Table

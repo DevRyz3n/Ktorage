@@ -1,6 +1,5 @@
 package dev.ryz3n.model
 
-import org.jetbrains.exposed.sql.Table
 
 data class IgPostsFullByJson(
     val comments: List<CommentByJson>,
