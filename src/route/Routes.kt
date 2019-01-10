@@ -8,8 +8,8 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 
 fun Route.igPost(igPostService: IgPostService){
-    route("/ig"){
-        get ("/barongfamily"){
+    route("/demo"){
+        get ("/get"){
             call.respond(igPostService.get())
         }
     }

@@ -1,11 +1,7 @@
 package dev.ryz3n.service
 
-import dev.ryz3n.database.DatabaseFactory.dbQuery
-import dev.ryz3n.model.ChangeType
 import dev.ryz3n.model.Notification
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
 
 abstract class BaseService<T> {
 

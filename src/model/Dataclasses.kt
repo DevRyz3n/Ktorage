@@ -1,6 +1,5 @@
 package dev.ryz3n.model
 
-import org.jetbrains.exposed.sql.Table
 
 data class IgPostsFullByJson(
     val comments: List<CommentByJson>,
@@ -21,7 +20,7 @@ data class IgPostsFull(
     val post_from: String,
     val post_author: String,
     val post_content: String,
-    val post_date: String,
+    val post_date: Long,
     val post_img_0: String,
     val post_img_1: String,
     val post_img_2: String,

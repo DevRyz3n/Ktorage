@@ -9,12 +9,14 @@ import com.zaxxer.hikari.HikariDataSource
 import dev.ryz3n.model.IgPostsFullByJson
 import dev.ryz3n.model.PostsTable
 import dev.ryz3n.util.CrawlerTxtUtil
+import dev.ryz3n.util.DateUtil.igPostDate2Timestamp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlin.Exception
 
 object DatabaseFactory {
 
@@ -29,31 +31,36 @@ object DatabaseFactory {
 
 
             list.forEach { json ->
-                PostsTable.insert {table->
-                    table[post_key] = json.key
-                    table[post_author] = "post_author"
-                    table[post_content] = "post_content"
-                    table[post_from] = "instagram"
-                    table[post_date] = json.datetime
+                try {
+                    PostsTable.insert { table ->
+                        table[post_key] = json.key
+                        table[post_author] = "post_author"
+                        table[post_content] = "post_content"
+                        table[post_from] = "instagram"
+                        table[post_date] = igPostDate2Timestamp(json.datetime)
 
-                    val imgList = arrayListOf("","","","","","","","","","")
-                    var index = 0
-                    json.img_urls.forEach { url ->
-                        imgList[index] = url
-                        index++
+                        val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
+                        var index = 0
+                        json.img_urls.forEach { url ->
+                            imgList[index] = url
+                            index++
+                        }
+
+                        table[post_img_0] = imgList[0]
+                        table[post_img_1] = imgList[1]
+                        table[post_img_2] = imgList[2]
+                        table[post_img_3] = imgList[3]
+                        table[post_img_4] = imgList[4]
+                        table[post_img_5] = imgList[5]
+                        table[post_img_6] = imgList[6]
+                        table[post_img_7] = imgList[7]
+                        table[post_img_8] = imgList[8]
+                        table[post_img_9] = imgList[9]
                     }
-
-                    table[post_img_0] = imgList[0]
-                    table[post_img_1] = imgList[1]
-                    table[post_img_2] = imgList[2]
-                    table[post_img_3] = imgList[3]
-                    table[post_img_4] = imgList[4]
-                    table[post_img_5] = imgList[5]
-                    table[post_img_6] = imgList[6]
-                    table[post_img_7] = imgList[7]
-                    table[post_img_8] = imgList[8]
-                    table[post_img_9] = imgList[9]
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
+
             }
 
         }

@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.selectAll
 class IgPostService : BaseService<IgPostsFull>() {
 
     override suspend fun get(): List<IgPostsFull> = dbQuery {
-        PostsTable.selectAll().map { this.to(it) }
+        PostsTable.selectAll().map { to(it) }.sortedByDescending { it.post_date }
     }
 
     override suspend fun add(list: List<IgPostsFull>) = dbQuery {
