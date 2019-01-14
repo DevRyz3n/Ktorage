@@ -6,6 +6,7 @@ data class IgPostsFullByJson(
     val content: String,
     val datetime: String,
     val img_urls: List<String>,
+    val vdo_urls: List<String>,
     val key: String
 )
 
@@ -21,8 +22,8 @@ data class IgPostsFull(
     val post_author: String,
     val post_content: String,
     val post_date: Long,
-    val post_img_list: List<String>
-
+    val post_img_list: List<String>,
+    val post_vdo_list: List<String>
 )
 
 

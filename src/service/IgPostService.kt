@@ -21,6 +21,7 @@ class IgPostService : BaseService<IgPostsFull>() {
                 table[post_author] = igPostsFull.post_author
                 table[post_content] = igPostsFull.post_content
                 table[post_date] = igPostsFull.post_date
+
                 table[post_img_0] = igPostsFull.post_img_list[0]
                 table[post_img_1] = igPostsFull.post_img_list[1]
                 table[post_img_2] = igPostsFull.post_img_list[2]
@@ -31,6 +32,17 @@ class IgPostService : BaseService<IgPostsFull>() {
                 table[post_img_7] = igPostsFull.post_img_list[7]
                 table[post_img_8] = igPostsFull.post_img_list[8]
                 table[post_img_9] = igPostsFull.post_img_list[9]
+
+                table[post_vdo_0] = igPostsFull.post_img_list[0]
+                table[post_vdo_1] = igPostsFull.post_img_list[1]
+                table[post_vdo_2] = igPostsFull.post_img_list[2]
+                table[post_vdo_3] = igPostsFull.post_img_list[3]
+                table[post_vdo_4] = igPostsFull.post_img_list[4]
+                table[post_vdo_5] = igPostsFull.post_img_list[5]
+                table[post_vdo_6] = igPostsFull.post_img_list[6]
+                table[post_vdo_7] = igPostsFull.post_img_list[7]
+                table[post_vdo_8] = igPostsFull.post_img_list[8]
+                table[post_vdo_9] = igPostsFull.post_img_list[9]
             }
         }
 
@@ -55,7 +67,19 @@ class IgPostService : BaseService<IgPostsFull>() {
                 row[PostsTable.post_img_7],
                 row[PostsTable.post_img_8],
                 row[PostsTable.post_img_9]
-                ).filter { it != ""
-            }
+            ).filter { it != "" },
+            post_vdo_list = mutableListOf(
+                row[PostsTable.post_vdo_0],
+                row[PostsTable.post_vdo_1],
+                row[PostsTable.post_vdo_2],
+                row[PostsTable.post_vdo_3],
+                row[PostsTable.post_vdo_4],
+                row[PostsTable.post_vdo_5],
+                row[PostsTable.post_vdo_6],
+                row[PostsTable.post_vdo_7],
+                row[PostsTable.post_vdo_8],
+                row[PostsTable.post_vdo_9]
+            ).filter { it != "" }
+
         )
 }

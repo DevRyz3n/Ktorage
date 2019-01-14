@@ -45,7 +45,6 @@ object DatabaseFactory {
                         json.img_urls.forEachIndexed { urlIndex, url ->
                             imgList[urlIndex] = url
                         }
-
                         table[post_img_0] = imgList[0]
                         table[post_img_1] = imgList[1]
                         table[post_img_2] = imgList[2]
@@ -56,6 +55,21 @@ object DatabaseFactory {
                         table[post_img_7] = imgList[7]
                         table[post_img_8] = imgList[8]
                         table[post_img_9] = imgList[9]
+
+                        val vdoList = arrayListOf("", "", "", "", "", "", "", "", "", "")
+                        json.vdo_urls.forEachIndexed { vdoIndex, url ->
+                            vdoList[vdoIndex] = url
+                        }
+                        table[post_vdo_0] = vdoList[0]
+                        table[post_vdo_1] = vdoList[1]
+                        table[post_vdo_2] = vdoList[2]
+                        table[post_vdo_3] = vdoList[3]
+                        table[post_vdo_4] = vdoList[4]
+                        table[post_vdo_5] = vdoList[5]
+                        table[post_vdo_6] = vdoList[6]
+                        table[post_vdo_7] = vdoList[7]
+                        table[post_vdo_8] = vdoList[8]
+                        table[post_vdo_9] = vdoList[9]
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
