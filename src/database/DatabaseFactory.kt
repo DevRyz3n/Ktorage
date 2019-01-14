@@ -20,7 +20,9 @@ import kotlin.Exception
 
 object DatabaseFactory {
 
-    fun init(gson: Gson = Gson()) {
+    private val gson: Gson = Gson()
+
+    fun init() {
         Database.connect(dbConnect())
         transaction {
             create(PostsTable)
@@ -34,16 +36,14 @@ object DatabaseFactory {
                 try {
                     PostsTable.insert { table ->
                         table[post_key] = json.key
-                        table[post_author] = "post_author"
-                        table[post_content] = "post_content"
+                        table[post_author] = json.comments[0].author
+                        table[post_content] = json.comments[0].comment
                         table[post_from] = "instagram"
                         table[post_date] = igPostDate2Timestamp(json.datetime)
 
                         val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                        var index = 0
-                        json.img_urls.forEach { url ->
-                            imgList[index] = url
-                            index++
+                        json.img_urls.forEachIndexed { urlIndex, url ->
+                            imgList[urlIndex] = url
                         }
 
                         table[post_img_0] = imgList[0]

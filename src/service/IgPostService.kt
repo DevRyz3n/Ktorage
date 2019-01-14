@@ -21,16 +21,16 @@ class IgPostService : BaseService<IgPostsFull>() {
                 table[post_author] = igPostsFull.post_author
                 table[post_content] = igPostsFull.post_content
                 table[post_date] = igPostsFull.post_date
-                table[post_img_0] = igPostsFull.post_img_0
-                table[post_img_1] = igPostsFull.post_img_1
-                table[post_img_2] = igPostsFull.post_img_2
-                table[post_img_3] = igPostsFull.post_img_3
-                table[post_img_4] = igPostsFull.post_img_4
-                table[post_img_5] = igPostsFull.post_img_5
-                table[post_img_6] = igPostsFull.post_img_6
-                table[post_img_7] = igPostsFull.post_img_7
-                table[post_img_8] = igPostsFull.post_img_8
-                table[post_img_9] = igPostsFull.post_img_9
+                table[post_img_0] = igPostsFull.post_img_list[0]
+                table[post_img_1] = igPostsFull.post_img_list[1]
+                table[post_img_2] = igPostsFull.post_img_list[2]
+                table[post_img_3] = igPostsFull.post_img_list[3]
+                table[post_img_4] = igPostsFull.post_img_list[4]
+                table[post_img_5] = igPostsFull.post_img_list[5]
+                table[post_img_6] = igPostsFull.post_img_list[6]
+                table[post_img_7] = igPostsFull.post_img_list[7]
+                table[post_img_8] = igPostsFull.post_img_list[8]
+                table[post_img_9] = igPostsFull.post_img_list[9]
             }
         }
 
@@ -44,15 +44,18 @@ class IgPostService : BaseService<IgPostsFull>() {
             post_author = row[PostsTable.post_author],
             post_content = row[PostsTable.post_content],
             post_date = row[PostsTable.post_date],
-            post_img_0 = row[PostsTable.post_img_0],
-            post_img_1 = row[PostsTable.post_img_1],
-            post_img_2 = row[PostsTable.post_img_2],
-            post_img_3 = row[PostsTable.post_img_3],
-            post_img_4 = row[PostsTable.post_img_4],
-            post_img_5 = row[PostsTable.post_img_5],
-            post_img_6 = row[PostsTable.post_img_6],
-            post_img_7 = row[PostsTable.post_img_7],
-            post_img_8 = row[PostsTable.post_img_8],
-            post_img_9 = row[PostsTable.post_img_9]
+            post_img_list = mutableListOf(
+                row[PostsTable.post_img_0],
+                row[PostsTable.post_img_1],
+                row[PostsTable.post_img_2],
+                row[PostsTable.post_img_3],
+                row[PostsTable.post_img_4],
+                row[PostsTable.post_img_5],
+                row[PostsTable.post_img_6],
+                row[PostsTable.post_img_7],
+                row[PostsTable.post_img_8],
+                row[PostsTable.post_img_9]
+                ).filter { it != ""
+            }
         )
 }
