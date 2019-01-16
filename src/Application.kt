@@ -1,19 +1,17 @@
+@file:Suppress("SpellCheckingInspection")
+
 package dev.ryz3n
 
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
 import io.ktor.routing.*
-import io.ktor.http.*
 import io.ktor.gson.*
 import io.ktor.features.*
 import com.fasterxml.jackson.databind.*
 import dev.ryz3n.database.DatabaseFactory
+import dev.ryz3n.model.FutureHouseMusicTable
+import dev.ryz3n.model.NcsPostsTable
 import dev.ryz3n.route.igPost
-import dev.ryz3n.service.IgPostService
 import io.ktor.jackson.*
-import io.ktor.client.*
-import io.ktor.client.engine.apache.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -29,14 +27,17 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
-    DatabaseFactory.init()
-    // val client = HttpClient(Apache) {}
+    val tableMap = mutableMapOf(
+        "nocopyrightsounds" to NcsPostsTable,
+        "futurehousemusic" to FutureHouseMusicTable
+    )
 
+    DatabaseFactory.init(
+        tableMap
+    )
 
-    val igPostService = IgPostService()
-
-    install(Routing){
-        igPost(igPostService)
+    install(Routing) {
+        igPost(tableMap)
     }
 }
 
