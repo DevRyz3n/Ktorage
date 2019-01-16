@@ -6,12 +6,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import dev.ryz3n.model.IgPostsFullByJson
-import dev.ryz3n.model.PostsTable
+import dev.ryz3n.model.*
 import dev.ryz3n.util.CrawlerTxtUtil
 import dev.ryz3n.util.DateUtil.igPostDate2Timestamp
+import dev.ryz3n.util.getMusicName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.jetbrains.annotations.NotNull
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.insert
@@ -20,50 +21,69 @@ import kotlin.Exception
 
 object DatabaseFactory {
 
-    fun init(gson: Gson = Gson()) {
+    private val gson: Gson = Gson()
+
+    fun init(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
         Database.connect(dbConnect())
-        transaction {
-            create(PostsTable)
-            val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\output.txt")
+        try {
+            tableMap.forEach { fileName, table ->
+                transaction {
+                    create(table)
 
-            val list =
-                gson.fromJson<List<IgPostsFullByJson>>(txt, object : TypeToken<List<IgPostsFullByJson>>() {}.type)
+                    val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName.txt")
 
+                    val list = gson.fromJson<List<IgPostsFullByJson>>(
+                        txt,
+                        object : TypeToken<List<IgPostsFullByJson>>() {}.type
+                    )
 
-            list.forEach { json ->
-                try {
-                    PostsTable.insert { table ->
-                        table[post_key] = json.key
-                        table[post_author] = "post_author"
-                        table[post_content] = "post_content"
-                        table[post_from] = "instagram"
-                        table[post_date] = igPostDate2Timestamp(json.datetime)
+                    list.forEach { json ->
 
-                        val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                        var index = 0
-                        json.img_urls.forEach { url ->
-                            imgList[index] = url
-                            index++
+                        table.insert { it ->
+                            it[post_key] = json.key
+                            it[post_author] = json.comments[0].author
+                            it[post_content] = json.comments[0].comment
+                            it[post_date] = igPostDate2Timestamp(json.datetime)
+                            it[post_music] = json.comments[0].comment.getMusicName(records = json.comments[0].author)
+
+                            val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
+                            json.img_urls.forEachIndexed { urlIndex, url ->
+                                imgList[urlIndex] = url
+                            }
+                            it[post_img_0] = imgList[0]
+                            it[post_img_1] = imgList[1]
+                            it[post_img_2] = imgList[2]
+                            it[post_img_3] = imgList[3]
+                            it[post_img_4] = imgList[4]
+                            it[post_img_5] = imgList[5]
+                            it[post_img_6] = imgList[6]
+                            it[post_img_7] = imgList[7]
+                            it[post_img_8] = imgList[8]
+                            it[post_img_9] = imgList[9]
+
+                            val vdoList = arrayListOf("", "", "", "", "", "", "", "", "", "")
+                            json.vdo_urls.forEachIndexed { vdoIndex, url ->
+                                vdoList[vdoIndex] = url
+                            }
+                            it[post_vdo_0] = vdoList[0]
+                            it[post_vdo_1] = vdoList[1]
+                            it[post_vdo_2] = vdoList[2]
+                            it[post_vdo_3] = vdoList[3]
+                            it[post_vdo_4] = vdoList[4]
+                            it[post_vdo_5] = vdoList[5]
+                            it[post_vdo_6] = vdoList[6]
+                            it[post_vdo_7] = vdoList[7]
+                            it[post_vdo_8] = vdoList[8]
+                            it[post_vdo_9] = vdoList[9]
                         }
-
-                        table[post_img_0] = imgList[0]
-                        table[post_img_1] = imgList[1]
-                        table[post_img_2] = imgList[2]
-                        table[post_img_3] = imgList[3]
-                        table[post_img_4] = imgList[4]
-                        table[post_img_5] = imgList[5]
-                        table[post_img_6] = imgList[6]
-                        table[post_img_7] = imgList[7]
-                        table[post_img_8] = imgList[8]
-                        table[post_img_9] = imgList[9]
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
 
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
     }
 
     suspend fun <T> dbQuery(
