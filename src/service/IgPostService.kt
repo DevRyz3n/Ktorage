@@ -17,7 +17,6 @@ class IgPostService(protected var table: BasePostsTable) : BaseService<IgPostsFu
         list.forEach { igPostsFull ->
             table.insert { it ->
                 it[post_key] = igPostsFull.post_key
-                it[post_from] = igPostsFull.post_from
                 it[post_author] = igPostsFull.post_author
                 it[post_content] = igPostsFull.post_content
                 it[post_date] = igPostsFull.post_date
@@ -52,9 +51,9 @@ class IgPostService(protected var table: BasePostsTable) : BaseService<IgPostsFu
         IgPostsFull(
             _id = row[table._id],
             post_key = row[table.post_key],
-            post_from = row[table.post_from],
             post_author = row[table.post_author],
             post_content = row[table.post_content],
+            post_music = row[table.post_music],
             post_date = row[table.post_date],
             post_img_list = mutableListOf(
                 row[table.post_img_0],

@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.Table
 open class BasePostsTable : Table() {
     val _id = integer("_id").primaryKey().autoIncrement()
     val post_key = varchar("post_key", 255).uniqueIndex()
-    val post_from = varchar("post_from", 255)
     val post_author = varchar("post_author", 255)
     val post_content = varchar("post_content", 255)
+    val post_music = varchar("post_music", 255)
     val post_date = long("post_date")
 
     val post_img_0 = varchar("post_img_0", 255)
@@ -36,4 +36,4 @@ open class BasePostsTable : Table() {
 
 object NcsPostsTable: BasePostsTable()
 
-object FutureHouseMusicTable: BasePostsTable()
+object FutureHouseMusicPostsTable: BasePostsTable()

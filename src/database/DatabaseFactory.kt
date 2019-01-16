@@ -9,6 +9,7 @@ import com.zaxxer.hikari.HikariDataSource
 import dev.ryz3n.model.*
 import dev.ryz3n.util.CrawlerTxtUtil
 import dev.ryz3n.util.DateUtil.igPostDate2Timestamp
+import dev.ryz3n.util.getMusicName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.annotations.NotNull
@@ -42,8 +43,8 @@ object DatabaseFactory {
                             it[post_key] = json.key
                             it[post_author] = json.comments[0].author
                             it[post_content] = json.comments[0].comment
-                            it[post_from] = "instagram"
                             it[post_date] = igPostDate2Timestamp(json.datetime)
+                            it[post_music] = json.comments[0].comment.getMusicName(records = json.comments[0].author)
 
                             val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
                             json.img_urls.forEachIndexed { urlIndex, url ->

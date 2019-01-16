@@ -8,7 +8,7 @@ import io.ktor.gson.*
 import io.ktor.features.*
 import com.fasterxml.jackson.databind.*
 import dev.ryz3n.database.DatabaseFactory
-import dev.ryz3n.model.FutureHouseMusicTable
+import dev.ryz3n.model.FutureHouseMusicPostsTable
 import dev.ryz3n.model.NcsPostsTable
 import dev.ryz3n.route.igPost
 import io.ktor.jackson.*
@@ -29,7 +29,7 @@ fun Application.module(testing: Boolean = false) {
 
     val tableMap = mutableMapOf(
         "nocopyrightsounds" to NcsPostsTable,
-        "futurehousemusic" to FutureHouseMusicTable
+        "futurehousemusic" to FutureHouseMusicPostsTable
     )
 
     DatabaseFactory.init(
