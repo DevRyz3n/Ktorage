@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.Exception
 
@@ -25,29 +26,37 @@ object DatabaseFactory {
 
     fun init(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
         Database.connect(dbConnect())
-        try {
-            tableMap.forEach { fileName, table ->
-                transaction {
-                    create(table)
+        tableMap.forEach { _, table ->
+            transaction {
+                create(table)
+            }
+        }
+        update(tableMap)
+    }
 
-                    val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName.txt")
+    fun update(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
 
-                    val list = gson.fromJson<List<IgPostsFullByJson>>(
-                        txt,
-                        object : TypeToken<List<IgPostsFullByJson>>() {}.type
-                    )
+        tableMap.forEach { fileName, table ->
+            transaction {
+                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName.txt")
 
-                    list.forEach { json ->
+                val list = gson.fromJson<List<IgPostsFullByJson>>(
+                    txt,
+                    object : TypeToken<List<IgPostsFullByJson>>() {}.type
+                )
 
+                list.forEach { txtList ->
+                    try {
                         table.insert { it ->
-                            it[post_key] = json.key
-                            it[post_author] = json.comments[0].author
-                            it[post_content] = json.comments[0].comment
-                            it[post_date] = igPostDate2Timestamp(json.datetime)
-                            it[post_music] = json.comments[0].comment.getMusicName(records = json.comments[0].author)
+                            it[post_key] = txtList.key
+                            it[post_author] = txtList.comments[0].author
+                            it[post_content] = txtList.comments[0].comment
+                            it[post_date] = igPostDate2Timestamp(txtList.datetime)
+                            it[post_music] =
+                                    txtList.comments[0].comment.getMusicName(records = txtList.comments[0].author)
 
                             val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                            json.img_urls.forEachIndexed { urlIndex, url ->
+                            txtList.img_urls.forEachIndexed { urlIndex, url ->
                                 imgList[urlIndex] = url
                             }
                             it[post_img_0] = imgList[0]
@@ -62,7 +71,7 @@ object DatabaseFactory {
                             it[post_img_9] = imgList[9]
 
                             val vdoList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                            json.vdo_urls.forEachIndexed { vdoIndex, url ->
+                            txtList.vdo_urls.forEachIndexed { vdoIndex, url ->
                                 vdoList[vdoIndex] = url
                             }
                             it[post_vdo_0] = vdoList[0]
@@ -76,12 +85,12 @@ object DatabaseFactory {
                             it[post_vdo_8] = vdoList[8]
                             it[post_vdo_9] = vdoList[9]
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
 
     }
@@ -100,7 +109,7 @@ object DatabaseFactory {
         hikariConfig.jdbcUrl = "jdbc:h2:~/test"
         hikariConfig.username = "admin"
         hikariConfig.password = "1234"
-        hikariConfig.maximumPoolSize = 3
+        hikariConfig.maximumPoolSize = 8
         hikariConfig.isAutoCommit = false
         hikariConfig.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         hikariConfig.validate()

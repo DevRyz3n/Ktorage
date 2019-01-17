@@ -8,10 +8,13 @@ import io.ktor.gson.*
 import io.ktor.features.*
 import com.fasterxml.jackson.databind.*
 import dev.ryz3n.database.DatabaseFactory
+import dev.ryz3n.model.BasePostsTable
 import dev.ryz3n.model.FutureHouseMusicPostsTable
 import dev.ryz3n.model.NcsPostsTable
 import dev.ryz3n.route.igPost
 import io.ktor.jackson.*
+import kotlinx.coroutines.launch
+import org.jetbrains.annotations.NotNull
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -39,5 +42,23 @@ fun Application.module(testing: Boolean = false) {
     install(Routing) {
         igPost(tableMap)
     }
+
+    launch {
+        updateDB(
+            tableMap
+        )
+    }
+
+
+
 }
 
+private fun updateDB(@NotNull tableMap: MutableMap<String, BasePostsTable>, cycle: Long = 1*60*1000L){
+    while (true) {
+        Thread.sleep(cycle)
+        println("waiting for update")
+
+        DatabaseFactory.update(tableMap)
+        println("updating")
+    }
+}
