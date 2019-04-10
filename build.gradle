@@ -2,7 +2,7 @@ buildscript {
     repositories {
         jcenter()
     }
-    
+
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -45,4 +45,14 @@ dependencies {
     
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
+}
+
+
+task craw(type: Exec) {
+    group = 'Ktorage'
+    commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py posts_full -u futurehousemusic -n 5 -o E:/KTCODE/instagram-crawler/futurehousemusic.txt"
+}
+
+craw.doLast {
+    craw.execute()
 }
