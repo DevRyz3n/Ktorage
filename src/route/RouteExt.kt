@@ -9,15 +9,22 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import org.jetbrains.annotations.NotNull
 
-fun Route.igPost(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
+fun Route.igPost(@NotNull crawList: MutableList<String>) {
+
+    val igPostService = IgPostService(BasePostsTable())
 
     route("/get") {
-        tableMap.forEach { path, currentTable ->
+        get("/all") {
+            call.respond(
+                igPostService.getAll()
+            )
+        }
+
+        crawList.forEach { path ->
             get("/$path") {
-                val igPostService = IgPostService(currentTable)
-                    call.respond(
-                        igPostService.get()
-                    )
+                call.respond(
+                    igPostService.get(path)
+                )
             }
         }
     }

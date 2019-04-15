@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils.create
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.Exception
 
@@ -24,21 +23,19 @@ object DatabaseFactory {
 
     private val gson: Gson = Gson()
 
-    fun init(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
+    fun init(@NotNull crawList: MutableList<String>) {
         Database.connect(dbConnect())
-        tableMap.forEach { _, table ->
             transaction {
-                create(table)
+                create(BasePostsTable())
             }
-        }
-        update(tableMap)
+        update(crawList)
     }
 
-    fun update(@NotNull tableMap: MutableMap<String, BasePostsTable>) {
+    fun update(@NotNull crawList: MutableList<String>) {
 
-        tableMap.forEach { fileName, table ->
+        crawList.forEach { fileName ->
             transaction {
-                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName.txt")
+                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-.txt")
 
                 val list = gson.fromJson<List<IgPostsFullByJson>>(
                     txt,
@@ -47,7 +44,7 @@ object DatabaseFactory {
 
                 list.forEach { txtList ->
                     try {
-                        table.insert { it ->
+                        BasePostsTable().insert { it ->
                             it[post_key] = txtList.key
                             it[post_author] = txtList.comments[0].author
                             it[post_content] = txtList.comments[0].comment

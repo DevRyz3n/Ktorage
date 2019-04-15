@@ -14,7 +14,9 @@ abstract class BaseService<T> {
     protected fun removeChangeListener(id: Int) = listeners.remove(id)
 
 
-    abstract suspend fun get(): List<T>
+    abstract suspend fun getAll(): List<T>
+
+    abstract suspend fun get(author: String): List<T>
 
     abstract suspend fun add(list: List<T>)
 

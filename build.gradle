@@ -42,17 +42,24 @@ dependencies {
     compile "com.h2database:h2:$h2_version"
     compile "com.zaxxer:HikariCP:$hikari_version"
     compile "org.jetbrains.exposed:exposed:$exposed_version"
-    
+
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
     testCompile "io.ktor:ktor-server-tests:$ktor_version"
 }
 
 
-task craw(type: Exec) {
+task crawAll() << {
     group = 'Ktorage'
-    commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py posts_full -u futurehousemusic -n 5 -o E:/KTCODE/instagram-crawler/futurehousemusic.txt"
-}
-
-craw.doLast {
-    craw.execute()
+    while (true) {
+        try {
+            file("craw.txt").eachLine { line ->
+                println(line)
+                exec {
+                    commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py posts_full -u $line -n 5 -o E:/KTCODE/instagram-crawler/$line-.txt"
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
+    }
 }

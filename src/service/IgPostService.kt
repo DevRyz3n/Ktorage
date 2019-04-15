@@ -3,13 +3,17 @@ package dev.ryz3n.service
 import dev.ryz3n.model.IgPostsFull
 import dev.ryz3n.database.DatabaseFactory.dbQuery
 import dev.ryz3n.model.BasePostsTable
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 class IgPostService(protected var table: BasePostsTable) : BaseService<IgPostsFull>() {
 
-    override suspend fun get(): List<IgPostsFull> = dbQuery {
+    override suspend fun get(author: String): List<IgPostsFull> = dbQuery {
+        table.select { table.post_author eq author }.map { resultRow -> to(resultRow) }
+            .sortedByDescending { it.post_date }
+    }
+
+    override suspend fun getAll(): List<IgPostsFull> = dbQuery {
         table.selectAll().map { resultRow -> to(resultRow) }.sortedByDescending { it.post_date }
     }
 
