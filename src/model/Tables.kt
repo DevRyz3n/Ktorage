@@ -7,7 +7,7 @@ open class BasePostsTable : Table() {
     val _id = integer("_id").primaryKey().autoIncrement()
     val post_key = varchar("post_key", 255).uniqueIndex()
     val post_author = varchar("post_author", 255)
-    val post_content = varchar("post_content", 255)
+    val post_content = varchar("post_content", Int.MAX_VALUE)
     val post_music = varchar("post_music", 255)
     val post_date = long("post_date")
 
@@ -32,6 +32,14 @@ open class BasePostsTable : Table() {
     val post_vdo_7 = varchar("post_vdo_7", 255)
     val post_vdo_8 = varchar("post_vdo_8", 255)
     val post_vdo_9 = varchar("post_vdo_9", 255)
+}
+
+open class BaseAuthorTable() : Table(){
+    val _id = integer("_id").primaryKey().autoIncrement()
+    val author_ig_name = varchar("author_ig_name", 255).uniqueIndex()
+    val author_name = varchar("author_name", 255)
+    val author_info = varchar("author_info", 255)
+    val author_avatar = varchar("author_avatar", 255)
 }
 
 object NcsPostsTable: BasePostsTable()

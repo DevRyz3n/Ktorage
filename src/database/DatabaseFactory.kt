@@ -25,9 +25,10 @@ object DatabaseFactory {
 
     fun init(@NotNull crawList: MutableList<String>) {
         Database.connect(dbConnect())
-            transaction {
-                create(BasePostsTable())
-            }
+        transaction {
+            create(BasePostsTable())
+            create(BaseAuthorTable())
+        }
         update(crawList)
     }
 
@@ -35,56 +36,74 @@ object DatabaseFactory {
 
         crawList.forEach { fileName ->
             transaction {
-                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-.txt")
-
-                val list = gson.fromJson<List<IgPostsFullByJson>>(
+                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-posts.txt")
+                val postList = gson.fromJson<List<IgPostsFullByJson>>(
                     txt,
                     object : TypeToken<List<IgPostsFullByJson>>() {}.type
                 )
 
-                list.forEach { txtList ->
+                val profileTxt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-profile.txt")
+                val profile = gson.fromJson<IgAuthorByJson>(
+                    profileTxt,
+                    object : TypeToken<IgAuthorByJson>() {}.type
+                )
+
+                postList.forEach { post ->
                     try {
-                        BasePostsTable().insert { it ->
-                            it[post_key] = txtList.key
-                            it[post_author] = txtList.comments[0].author
-                            it[post_content] = txtList.comments[0].comment
-                            it[post_date] = igPostDate2Timestamp(txtList.datetime)
-                            it[post_music] =
-                                    txtList.comments[0].comment.getMusicName(records = txtList.comments[0].author)
+                        BasePostsTable().insert { postTable ->
+                            postTable[post_key] = post.key
+                            postTable[post_author] = post.comments[0].author
+                            postTable[post_content] = post.comments[0].comment
+                            postTable[post_date] = igPostDate2Timestamp(post.datetime)
+                            postTable[post_music] =
+                                    post.comments[0].comment.getMusicName(records = post.comments[0].author)
 
                             val imgList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                            txtList.img_urls.forEachIndexed { urlIndex, url ->
+                            post.img_urls.forEachIndexed { urlIndex, url ->
                                 imgList[urlIndex] = url
                             }
-                            it[post_img_0] = imgList[0]
-                            it[post_img_1] = imgList[1]
-                            it[post_img_2] = imgList[2]
-                            it[post_img_3] = imgList[3]
-                            it[post_img_4] = imgList[4]
-                            it[post_img_5] = imgList[5]
-                            it[post_img_6] = imgList[6]
-                            it[post_img_7] = imgList[7]
-                            it[post_img_8] = imgList[8]
-                            it[post_img_9] = imgList[9]
+                            postTable[post_img_0] = imgList[0]
+                            postTable[post_img_1] = imgList[1]
+                            postTable[post_img_2] = imgList[2]
+                            postTable[post_img_3] = imgList[3]
+                            postTable[post_img_4] = imgList[4]
+                            postTable[post_img_5] = imgList[5]
+                            postTable[post_img_6] = imgList[6]
+                            postTable[post_img_7] = imgList[7]
+                            postTable[post_img_8] = imgList[8]
+                            postTable[post_img_9] = imgList[9]
 
                             val vdoList = arrayListOf("", "", "", "", "", "", "", "", "", "")
-                            txtList.vdo_urls.forEachIndexed { vdoIndex, url ->
-                                vdoList[vdoIndex] = url
+                            if (!post.vdo_urls.isEmpty()){
+                                post.vdo_urls.forEachIndexed { vdoIndex, url ->
+                                    vdoList[vdoIndex] = url
+                                }
                             }
-                            it[post_vdo_0] = vdoList[0]
-                            it[post_vdo_1] = vdoList[1]
-                            it[post_vdo_2] = vdoList[2]
-                            it[post_vdo_3] = vdoList[3]
-                            it[post_vdo_4] = vdoList[4]
-                            it[post_vdo_5] = vdoList[5]
-                            it[post_vdo_6] = vdoList[6]
-                            it[post_vdo_7] = vdoList[7]
-                            it[post_vdo_8] = vdoList[8]
-                            it[post_vdo_9] = vdoList[9]
+                            postTable[post_vdo_0] = vdoList[0]
+                            postTable[post_vdo_1] = vdoList[1]
+                            postTable[post_vdo_2] = vdoList[2]
+                            postTable[post_vdo_3] = vdoList[3]
+                            postTable[post_vdo_4] = vdoList[4]
+                            postTable[post_vdo_5] = vdoList[5]
+                            postTable[post_vdo_6] = vdoList[6]
+                            postTable[post_vdo_7] = vdoList[7]
+                            postTable[post_vdo_8] = vdoList[8]
+                            postTable[post_vdo_9] = vdoList[9]
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
+                }
+
+                try {
+                    BaseAuthorTable().insert { profileTable ->
+                        profileTable[author_ig_name] = fileName
+                        profileTable[author_name] = profile.name
+                        profileTable[author_info] = profile.desc
+                        profileTable[author_avatar] = profile.photo_url
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
 
             }

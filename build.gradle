@@ -48,18 +48,28 @@ dependencies {
 }
 
 
+//noinspection GroovyAssignabilityCheck
 task crawAll() << {
     group = 'Ktorage'
     while (true) {
         try {
             file("craw.txt").eachLine { line ->
-                println(line)
-                exec {
-                    commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py posts_full -u $line -n 5 -o E:/KTCODE/instagram-crawler/$line-.txt"
-                }
+                println("crawling $line posts")
+                exec { commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py posts_full -u $line -n 5 -o E:/KTCODE/instagram-crawler/$line-posts.txt" }
             }
         } catch (Exception e) {
             e.printStackTrace()
         }
+    }
+}
+
+crawAll.doFirst {
+    try {
+        file("craw.txt").eachLine { line ->
+            println("crawling $line profile")
+            exec { commandLine "cmd", "/c python E:/KTCODE/instagram-crawler/crawler.py profile -u $line -o E:/KTCODE/instagram-crawler/$line-profile.txt" }
+        }
+    } catch (Exception e) {
+        e.printStackTrace()
     }
 }
