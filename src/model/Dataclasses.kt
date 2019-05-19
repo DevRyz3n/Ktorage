@@ -12,7 +12,8 @@ data class IgPostsFullByJson(
 
 data class CommentByJson(
     val author: String,
-    val comment: String
+    val comment: String,
+    val comment1: String
 )
 
 data class IgPostsFull(

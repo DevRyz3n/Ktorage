@@ -47,7 +47,7 @@ fun Application.module(testing: Boolean = false) {
 
 }
 
-private suspend fun updateDB(@NotNull crawList: MutableList<String>, cycle: Long = 10 * 60 * 1000L) {
+private suspend fun updateDB(@NotNull crawList: MutableList<String>, cycle: Long = 2 * 60 * 1000L) {
     while (true) {
         delay(cycle)
         println("......waiting for update......")

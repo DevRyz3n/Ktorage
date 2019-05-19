@@ -26,7 +26,7 @@ fun Route.igPost(@NotNull crawList: MutableList<String>) {
             val all = igPostService.getAll()
             val videoOnly = ArrayList<IgPostsFull>()
             all.forEach { post ->
-                if (!post.post_vdo_list.isNullOrEmpty()) {
+                if (!post.post_vdo_list.isNullOrEmpty() and (post.post_author.trim() != "")) {
                     videoOnly.add(post)
                 }
             }

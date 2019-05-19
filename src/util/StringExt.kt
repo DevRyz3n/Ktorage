@@ -9,19 +9,13 @@ fun String.getMusicName(@NotNull records: String): String {
 
     when (records.trim()) {
         "ncs", "nocopyrightsounds" -> {
-            val content = this.replace('!', ' ').replace('“', '‘').replace('”', '’').trim()
-
-            var startIndex = 0
-            var endIndex = content.lastIndex
-            if (content.endsWith("io)")) {
-                if (content.find { it == '‘' } == null) return ""
-
-                content.forEachIndexed { index, c ->
-                    if (c == '‘') startIndex = index
-                    if (c == '’') endIndex = index
-                }
+            var music = ""
+                if (this.toLowerCase().endsWith("bio!")){
+                val tmp = this.substring(this.indexOf("'")+1)
+                music = tmp.substring(0, tmp.indexOf("'"))
             }
-            return "ncs - " + content.substring(startIndex + 1, endIndex)
+
+            return "ncs - $music"
         }
 
         "futurehousemusic" -> {

@@ -13,7 +13,7 @@ class IgPostService(protected var table: BasePostsTable) : BaseService<IgPostsFu
     }
 
     override suspend fun getAll(): List<IgPostsFull> = dbQuery {
-        table.selectAll().map { resultRow -> to(resultRow) }//.sortedByDescending { it.post_date }
+        table.selectAll().map { resultRow -> to(resultRow) }.sortedByDescending { it.post_date }
     }
 
     override suspend fun add(list: List<IgPostsFull>) = dbQuery {
