@@ -36,13 +36,13 @@ object DatabaseFactory {
 
         crawList.forEach { fileName ->
             transaction {
-                val txt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-posts.txt")
+                val txt = CrawlerTxtUtil.readTxtFile("E:\\Ktorage\\instagram-crawler\\$fileName-posts.txt")
                 val postList = gson.fromJson<List<IgPostsFullByJson>>(
                     txt,
                     object : TypeToken<List<IgPostsFullByJson>>() {}.type
                 ) ?: emptyList()
 
-                val profileTxt = CrawlerTxtUtil.readTxtFile("E:\\KTCODE\\instagram-crawler\\$fileName-profile.txt")
+                val profileTxt = CrawlerTxtUtil.readTxtFile("E:\\Ktorage\\instagram-crawler\\$fileName-profile.txt")
                 val profile = gson.fromJson<IgAuthorByJson>(
                     profileTxt,
                     object : TypeToken<IgAuthorByJson>() {}.type
@@ -132,7 +132,7 @@ object DatabaseFactory {
         val hikariConfig = HikariConfig()
         hikariConfig.driverClassName = "org.h2.Driver"
         hikariConfig.jdbcUrl = "jdbc:h2:~/test"
-        hikariConfig.username = "admin"
+        hikariConfig.username = "sa"
         hikariConfig.password = "1234"
         hikariConfig.maximumPoolSize = 8
         hikariConfig.isAutoCommit = false

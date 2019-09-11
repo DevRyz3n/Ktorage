@@ -34,6 +34,7 @@ open class BasePostsTable : Table() {
     val post_vdo_9 = varchar("post_vdo_9", 255)
 }
 
+@Suppress("PropertyName")
 open class BaseAuthorTable() : Table(){
     val _id = integer("_id").primaryKey().autoIncrement()
     val author_ig_name = varchar("author_ig_name", 255).uniqueIndex()
@@ -42,6 +43,3 @@ open class BaseAuthorTable() : Table(){
     val author_avatar = varchar("author_avatar", 255)
 }
 
-object NcsPostsTable: BasePostsTable()
-
-object FutureHouseMusicPostsTable: BasePostsTable()

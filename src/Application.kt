@@ -20,8 +20,6 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
     install(ContentNegotiation) {
-        gson {
-        }
 
         jackson {
             enable(SerializationFeature.INDENT_OUTPUT)
@@ -29,7 +27,7 @@ fun Application.module(testing: Boolean = false) {
     }
 
     val crawList: MutableList<String> = ArrayList()
-    File(".\\craw.txt").forEachLine {
+    File(".\\crawl.txt").forEachLine {
         crawList.add(it)
     }
 
